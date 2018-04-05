@@ -966,7 +966,7 @@ int API_EXPORTED libusb_get_port_path(libusb_context *ctx, libusb_device *dev,
  * function and make sure that you only access the parent before issuing
  * \ref libusb_free_device_list(). The reason is that libusb currently does
  * not maintain a permanent list of device instances, and therefore can
- * only guarantee that parents are fully instantiated within a 
+ * only guarantee that parents are fully instantiated within a
  * libusb_get_device_list() - libusb_free_device_list() block.
  */
 DEFAULT_VISIBILITY
@@ -1239,13 +1239,13 @@ int API_EXPORTED libusb_wrap_fd(libusb_context *ctx, int fd,
 	libusb_device_handle **dev_handle)
 {
 	struct libusb_device_handle *_dev_handle;
-	size_t priv_size = usbi_backend->device_handle_priv_size;
+	size_t priv_size = usbi_backend.device_handle_priv_size;
 	int r;
 	usbi_dbg("wrap %d", fd);
 
 	USBI_GET_CONTEXT(ctx);
 
-	if (!usbi_backend->wrap_fd)
+	if (!usbi_backend.wrap_fd)
 		return LIBUSB_ERROR_NOT_SUPPORTED;
 
 	_dev_handle = malloc(sizeof(*_dev_handle) + priv_size);
@@ -1263,7 +1263,7 @@ int API_EXPORTED libusb_wrap_fd(libusb_context *ctx, int fd,
 	_dev_handle->claimed_interfaces = 0;
 	memset(&_dev_handle->os_priv, 0, priv_size);
 
-	r = usbi_backend->wrap_fd(ctx, _dev_handle, fd);
+	r = usbi_backend.wrap_fd(ctx, _dev_handle, fd);
 	if (r < 0) {
 		usbi_dbg("wrap %d returns %d", fd, r);
 		usbi_mutex_destroy(&_dev_handle->lock);
