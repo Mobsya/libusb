@@ -336,7 +336,8 @@ static int linux_netlink_read_message(void)
 	}
 
 	cred = (struct ucred *)CMSG_DATA(cmsg);
-	if (cred->uid != 0) {
+	//On some sandboxed systems (flatpack), the sender might be reported a -2 (nobody)
+	if (cred->uid != 0 && cred->uid != (unsigned short)(-2)) {
 		usbi_dbg("ignoring netlink message with non-zero sender UID %u", (unsigned int)cred->uid);
 		return -1;
 	}
